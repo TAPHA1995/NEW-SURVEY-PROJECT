@@ -28,6 +28,7 @@ class SurveyUpdateRequest extends FormRequest
     {
         return [
             'titre' => 'required|string|max:1000',
+            'image' => 'string',
            'user_id' => 'exists:users,id',
            'status' => 'required|boolean',
            'description' => 'nullable|string',
