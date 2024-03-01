@@ -5,6 +5,8 @@ import axiosClient from "../axios.js";
 import Tbutton from '../Components/core/Tbutton.jsx';
 import { useNavigate } from 'react-router-dom';
 import SurveyQuestions from '../Components/SurveyQuestions.jsx';
+import {v4 as uuidv4} from "uuid"
+
 export default function SurveyView() {
   const navigate = useNavigate();
     const [survey, setSurvey] = useState({
@@ -56,9 +58,23 @@ export default function SurveyView() {
     
     };
 
-    function onSurveyUpdate(survey) {
-      setSurvey({...survey})
+    function onQuestionsUpdate(questions) {
+      setSurvey({
+        ...survey,
+        questions
+      })
     }
+
+    const addQuestion = () =>{
+      survey.questions.push({
+        id:uuidv4(),
+        type:"text",
+        question:"",
+        description:"",
+        data:{},
+      })
+      setSurvey({...survey})
+    };
 
     const image_profil={
       display:'flex',
@@ -182,7 +198,8 @@ export default function SurveyView() {
                 </div>
               </div>
               <br />
-              <SurveyQuestions survey={survey} onSurveyUpdate={onSurveyUpdate} />
+             <button type='button' onClick={addQuestion}>add question</button>
+              <SurveyQuestions questions={survey.questions} onQuestionsUpdate={onQuestionsUpdate} />
               </div>
             </div>
           </div>

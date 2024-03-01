@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SurveyController extends Controller
 {
@@ -165,7 +166,7 @@ class SurveyController extends Controller
             'type'=> ['required', new Enum(QuestionTypeEnum::class)],
             'description' => 'nullable|string',
             'data' => 'present',
-            'survey_id'=> 'exists:App\Models\Surey,id'
+            'survey_id'=> 'exists:App\Models\Survey,id'
         ]);
         return SurveyQuestion::create($validator->validated());
     }

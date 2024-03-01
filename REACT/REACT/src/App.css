@@ -1,4 +1,11 @@
 
+.mainContainerQuestionEditor{
+    background-color: #baabab;
+    padding: 10px;
+}
+.question, .questionType, .questionDescription{
+    border:1px solid #544c4c;
+}
 
 .form_create_survey_input, input .textarea{
     width:850px;
