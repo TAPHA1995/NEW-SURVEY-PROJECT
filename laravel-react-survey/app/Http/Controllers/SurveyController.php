@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
+
 
 class SurveyController extends Controller
 {
@@ -25,7 +26,7 @@ class SurveyController extends Controller
     {
         $user = $request->user();
 
-        return SurveyRessource::collection(Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10));
+        return SurveyRessource::collection(Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(2));
     }
 
     /**
@@ -82,12 +83,13 @@ class SurveyController extends Controller
             }
         }
         $survey->update($data);
-        $existingIds = $survey->question()->pluck('id')->toArray();
-        $newIds = Arr::pluck($data['question'], 'id');
+        $existingIds = $survey->questions()->pluck('id')->toArray();
+        $newIds = Arr::pluck($data['questions'], 'id');
         $toDelete = array_diff($existingIds, $newIds);
         $toAdd = array_diff($newIds, $existingIds);
 
         SurveyQuestion::destroy($toDelete);
+
         foreach($data['questions'] as $question){
             if (in_array($question['id'], $toAdd)){
                 $question['survey_id']= $survey->id;
@@ -95,10 +97,10 @@ class SurveyController extends Controller
             }
         }
 
-        $questionMap = collect($data['$question'])->keyBy('id');
+        $questionMap = collect($data['$questions'])->keyBy('id');
         foreach($survey->questions as $question){
             if (isset($questionMap[$question->id])){
-                $this->updataQuestion($question, $questionMap[$question->id]);
+                $this->updateQuestion($question, $questionMap[$question->id]);
             }
         }
            return new SurveyRessource($survey);
@@ -129,7 +131,7 @@ class SurveyController extends Controller
     {
         if (preg_match('/^data:image\/(\w+);base64,/', $image, $type))
         {
-                $image = substr($image, strpos($image, ',')+ 1);
+                $image = substr($image, strpos($image, ',') + 1);
                 $type = strtolower($type[1]);
 
                 if(!in_array($type,['jpg', 'jpeg', 'gif', 'png'])){
@@ -138,13 +140,13 @@ class SurveyController extends Controller
                 $image = str_replace('', '+', $image);
                 $image = base64_decode($image);
 
-                if($image == false){
+                if($image === false){
                     throw new \Exception('base64_decode failde');
                 }
         }else{
             throw new \Exception('did not match data URL with image data');
         }
-        $dir ='image';
+        $dir ='images/';
         $file = Str::random() . '.' . $type;
         $absolutePath = public_path($dir);
         $relativePath = $dir . $file;
@@ -181,6 +183,7 @@ class SurveyController extends Controller
          'id' => 'exists:App\Models\SurveyQuestion,id',
          'question'=> 'required|string',
          'type'=>['required', new Enum(QuestionTypeEnum::class)],
+         'description' => 'nullable|string',
          'data'=> 'present',
         ]);
         return $question->update($validator->validated());

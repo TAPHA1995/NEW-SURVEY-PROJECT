@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageComponent from '../Components/PageComponent'
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import axiosClient from "../axios.js";
 import Tbutton from '../Components/core/Tbutton.jsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SurveyQuestions from '../Components/SurveyQuestions.jsx';
 import {v4 as uuidv4} from "uuid"
 
 export default function SurveyView() {
   const navigate = useNavigate();
+  const {id} = useParams()
     const [survey, setSurvey] = useState({
         titre:"",
         slug:"",
@@ -75,6 +76,14 @@ export default function SurveyView() {
       })
       setSurvey({...survey})
     };
+    useEffect(()=>{
+      if(id){
+        axiosClient.get(`/survey/${id}`).then(({data})=>{
+          setSurvey(data.data)
+
+        })
+      }
+    },[])
 
     const image_profil={
       display:'flex',
@@ -94,7 +103,7 @@ export default function SurveyView() {
     }
 
   return (
-    <PageComponent title="Create new Survmoey" >
+    <PageComponent title={! id ? 'Create new Survey' : 'Update Survey'} >
       <br />
       <section style={form_create_survey}>
         <form onSubmit={onSubmit} className='bg-white p-4 'action="#" methode="POST">

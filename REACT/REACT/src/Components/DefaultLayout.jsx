@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import  '../App.css';
@@ -20,6 +20,13 @@ const{currentUser, userToken, setCurrentUser, setUserToken} = useStateContext();
     setUserToken(null);
    });
   };
+  useEffect(()=> {
+    axiosClient.get('/me')
+    .then(({data})=>{
+      setCurrentUser(data)
+    })
+
+  },[])
 
   return (
     <div>

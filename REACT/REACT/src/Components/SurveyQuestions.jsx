@@ -6,7 +6,7 @@ import QuestionEditor from "./QuestionEditor";
 
 export default function SurveyQuestions({questions,  onQuestionsUpdate}) {
 
-    const [myQuestions, setMyQuestions] = useState([...questions]);
+    const [myQuestions, setMyQuestions] = useState([questions]);
 
     const addQuestion = (index) =>{
       index = index !== undefined ? index :myQuestions.length

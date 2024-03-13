@@ -12,12 +12,10 @@ export default function SurveyListItems(survey) {
                 {survey.id}
                 </span>
                 </span>
-                <h2 className="title">Titre : {survey.titre_sondage}</h2>
-                <h2 className="title">Question 1 : {survey.reponse1}</h2>
-                <h2 className="title">Question 2 : {survey.reponse2}</h2>
-                <h2 className="title">Question 3 : {survey.reponse3}</h2>
-                <h2 className="title">Question 4 : {survey.reponse4}</h2>
-                <h2 className="title">Question 5 : {survey.reponse5}</h2>
+                <h2 className="title">Titre : {survey.image_url}</h2>
+                <h2 className="title">Titre : {survey.titre}</h2>
+                <h2 className="title">Question 1 : {survey.description}</h2>
+                <h2 className="title">Question 2 : {{ __html:survey.description}}</h2>
                 <div className='flex gap-5 bg-red-300 justify-center'>
                 <button to={`survey/${survey.id}`}>
                     Edite

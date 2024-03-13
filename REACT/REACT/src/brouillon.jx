@@ -1,30 +1,47 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import { useStateContext } from "../Contexts/ContextProvider";
+<PageComponent title="Survey" buttons={(
+      <Tbutton color="green" to="/survey/create" >
+        <span className='flex items-center bg-green-700 text-white mr-3 p-1 rounded'>
+        <PlusCircleIcon className='h-9 w-9 mr-3'/>
+        Create new
+        </span>
+         
+      </Tbutton>
+    )}>
+      <br />
+      <div className='d-flex justify-center items-center'>
+        En chargement...
+      </div>
+    
+      {! loading &&<div>
+        <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3'>
+          {survey.map(survey => (
+            <div className="inner">
+                <span className="pricing">
+                  ID :
+                  <span>
+                  {survey.id}
+                  </span>
+                  </span>
 
-export default function QuestionEditor({
-
-    index=0,
-    question,
-    deleteQuestion,
-    questionChange,
-
-}) {
-    const [model, setModel] = useState({...question});
-    const {questionTypes} = useStateContext();
-    useEffect(()=>{
-        questionChange(model);
-    },[model]);
-
-    function upperCaseFirst(str){
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-  return 
-  (
-   <div>
-    <div className="flex"></div>
-   </div>
-  )
-
-}
+                  <img src={survey.image_url} alt="" />
+                  <h2 className="title">Titre : {survey.titre}</h2>
+                  <h2 className="title">Description: {survey.description}</h2>
+              <div className='flex gap-5 bg-red-300 justify-center items-center'>
+                  <Tbutton to={`survey/${survey.id}`}>
+                      <PencilIcon className='w-5 h-5 mr-2'/>
+                  </Tbutton>
+                  <Tbutton href={`/view/survey/${survey.slug}`}>
+                      <ArrowTopRightOnSquareIcon className='w-7 h-7'/>
+                  </Tbutton>
+                  {survey.id && (
+                  <Tbutton onClick={onDeleteClick} circle link color="red">
+                  <TrashIcon className ='w-7 h-7'/>
+                  </Tbutton>
+                  )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <PaginationLinks />a
+      </div>
+      }

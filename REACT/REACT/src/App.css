@@ -20,6 +20,7 @@ body {
     color: rgb(0, 0, 0);
     font-family: "Inter", sans-serif;
 }
+
 .inner{
     background-color:white;
     width:300px;
@@ -30,7 +31,10 @@ body {
     -moz-box-shadow:-1px 9px 40px -12px rgba(0,0,0, 1.75);
     -webkit-box-shadow:-1px 9px 40px -12px rgba(0,0,0,1.75);
   }
-
+.inner img{
+    width: 100%;
+    height: 200px;
+}
 
 .bg-purple-500{
     display: flex;
