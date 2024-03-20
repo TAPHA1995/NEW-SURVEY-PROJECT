@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react';
 import axiosClient from '../axios';
 import PaginationLinks from '../Components/PaginationLinks';
 
-export default function Survey(onDeleteClick ) {
-  
+export default function Survey() {
+  const {showToast} = useStateContext();
   const [survey, setSurvey] = useState([]);
   const [meta, setMeta] = useState({});
   const [loading, setLoading] = useState(false);
@@ -31,9 +31,16 @@ export default function Survey(onDeleteClick ) {
       setLoading(false)
       })
   }
-  // const onDeleteClick = () =>{
-  //   console.log("on delete click");
-  // }
+  const onDeleteClick = (id) =>{
+    if(window.confirm('Etes-vous sûr de vouloir supprimer ce formulaire')){
+      axiosClient.delete(`/survey/${id}`)
+      .then(()=>{
+        getSurvey()
+        showToast('Le formulaire a été bien créé')
+      })
+    }
+  }
+
   useEffect(()=>{
     getSurvey()
      
@@ -46,19 +53,26 @@ export default function Survey(onDeleteClick ) {
     marginTop:'200px',
     color:"white",
     fontSize:'30px'
+  }
+  const  vide={
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
 
   }
+ 
   return (
     <>
-    <PageComponent title="Survey" buttons={(
+    <PageComponent title="Survey" buttons={
       <Tbutton color="green" to="/survey/create" >
         <span className='flex items-center bg-green-700 text-white mr-3 p-1 rounded'>
         <PlusCircleIcon className='h-9 w-9 mr-3'/>
         Create new
         </span>
       </Tbutton>
-    )}>
+    }>
       <br />
+      
       <div>
         {loading &&<div style={loader}>
           En chargement...
@@ -66,7 +80,11 @@ export default function Survey(onDeleteClick ) {
         }
       </div>
       {(!loading &&<div>
+        <div style={vide}>
+          {survey.length === 0 && <div className='py-8 text-center text-white'>Aucune création</div>}
+      </div>
         <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3'>
+         
           {survey.map((survey) => (
             <div className="inner">
                 <span className="pricing">
@@ -86,7 +104,7 @@ export default function Survey(onDeleteClick ) {
                       <ArrowTopRightOnSquareIcon className='w-7 h-7'/>
                   </Tbutton>
                   {survey.id && (
-                  <Tbutton onClick={onDeleteClick} circle link color="red">
+                  <Tbutton onClick={ev => onDeleteClick(survey.id)} circle link color="red">
                   <TrashIcon className ='w-7 h-7'/>
                   </Tbutton>
                   )}
@@ -94,7 +112,7 @@ export default function Survey(onDeleteClick ) {
             </div>
           ))}
         </div>
-        <PaginationLinks meta={meta} onPageClick={onPageClick}/>a
+        {survey.length > 0 &&<PaginationLinks meta={meta} onPageClick={onPageClick}/>}
       </div>
       )}
     </PageComponent>

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\QuestionTypeEnum;
+use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Http\Requests\SurveyStoreRequest;
 use App\Http\Requests\SurveyUpdateRequest;
 use App\Http\Resources\SurveyRessource;
 use App\Models\Survey;
+use App\Models\SurveyAnswer;
 use App\Models\SurveyQuestion;
+use App\Models\SurveyQuestionAnswer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -26,7 +29,7 @@ class SurveyController extends Controller
     {
         $user = $request->user();
 
-        return SurveyRessource::collection(Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(2));
+        return SurveyRessource::collection(Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(9));
     }
 
     /**
@@ -34,17 +37,12 @@ class SurveyController extends Controller
      */
     public function store(SurveyStoreRequest $request)
     {
-
         $data = $request->validated();
-
-
         if (isset($data['image'])){
             $relativePath = $this->saveImage($data['image']);
             $data['image']= $relativePath;
         }
-
         $survey = Survey::create($data);
-
         foreach ($data['questions'] as $question){
             $question['survey_id'] = $survey->id;
             $this->createQuestion($question);
@@ -52,16 +50,14 @@ class SurveyController extends Controller
         return new SurveyRessource($survey);
     }
 
-
-
-
     /**
      * Display the specified resource.
      */
     public function show(Survey $survey, Request $request)
     {
         $user = $request->user();
-        if ($user->id !== $survey->user_id){
+        if ($user->id !== $survey->user_id)
+        {
             return abort(403, 'Unauthorized action');
         }
        return new SurveyRessource($survey);
@@ -97,7 +93,7 @@ class SurveyController extends Controller
             }
         }
 
-        $questionMap = collect($data['$questions'])->keyBy('id');
+        $questionMap = collect($data['questions'])->keyBy('id');
         foreach($survey->questions as $question){
             if (isset($questionMap[$question->id])){
                 $this->updateQuestion($question, $questionMap[$question->id]);
@@ -129,7 +125,8 @@ class SurveyController extends Controller
 
     private function saveImage($image)
     {
-        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type))
+
+        if (preg_match('/^data:image\/(\w+);base64,/',$image , $type))
         {
                 $image = substr($image, strpos($image, ',') + 1);
                 $type = strtolower($type[1]);
@@ -137,7 +134,7 @@ class SurveyController extends Controller
                 if(!in_array($type,['jpg', 'jpeg', 'gif', 'png'])){
                     throw new \Exception('invalid image type');
                 }
-                $image = str_replace('', '+', $image);
+                $image = str_replace(' ', '+', $image);
                 $image = base64_decode($image);
 
                 if($image === false){
@@ -172,7 +169,6 @@ class SurveyController extends Controller
         ]);
         return SurveyQuestion::create($validator->validated());
     }
-
     private function updateQuestion(SurveyQuestion $question, $data)
     {
         if (is_array($data['data']))
@@ -188,4 +184,47 @@ class SurveyController extends Controller
         ]);
         return $question->update($validator->validated());
     }
+
+    public function getByslug(Survey $survey){
+        if(!$survey->status){
+            return response("", 404);
+        }
+        $currentDate = new \DateTime();
+        $expireDate = new \DateTime($survey->expire_date);
+        if($currentDate > $expireDate){
+            return response("", 404);
+        }
+        return new SurveyRessource($survey);
+    }
+
+    public function storeAnswer(StoreSurveyAnswerRequest $request, Survey $survey)
+    {
+    $validated = $request->validated();
+    $surveyAnswer = SurveyAnswer::create([
+        'survey_id' => $survey->id,
+        'start_date' => date('Y-m-d H:i:s'),
+        'end_date' => date('Y-m-d H:i:s'),
+    ]);
+
+    foreach ($validated['answers'] as $questionId => $answer)
+    {
+        $question = SurveyQuestion::where(['id' => $questionId, 'survey_id' =>
+        $survey->id])->get();
+        if(!$question){
+            return response("Invalid question ID: \"$questionId\"", 400);
+        }
+        $data =[
+            'survey_question_id'=> $questionId,
+            'survey_answer_id' => $surveyAnswer->id,
+            'answer' => is_array($answer) ? json_encode($answer) : $answer
+        ];
+
+        $questionAnswer = SurveyQuestionAnswer::create($data);
+    }
+
+    return response("", 201);
+
+    }
+
+
 }

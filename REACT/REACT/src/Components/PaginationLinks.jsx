@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import Survey from '../View/Survey';
 
 // import axiosClient from '../axios';
 
@@ -43,12 +44,13 @@ export default function PaginationLinks({meta, onPageClick}) {
           </p>
         </div>
         <div>
-          <nav className="isolate d-flex flex-row -space-x-px rounded-md shadow-sm   bg-white " aria-label="Pagination">
+          {meta.total > meta.per_page && <nav className="isolate d-flex flex-row -space-x-px rounded-md shadow-sm   bg-white " aria-label="Pagination">
            
             {meta.links && meta.links.map((link, ind) => (
               <a
               href="#"
               onClick={ev => onClick(ev, link)}
+              key={ind}
               aria-current="page"
               className={
                 "relative z-10 inline-flex items-center border bg-indigo-50 px-4 py-2 text-sm font-medium focus:z-20 "
@@ -61,6 +63,7 @@ export default function PaginationLinks({meta, onPageClick}) {
             </a>
             ))}
           </nav>
+          }
         </div>
       </div>
     </div>

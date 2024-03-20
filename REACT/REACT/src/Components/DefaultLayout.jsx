@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import  '../App.css';
 import { useStateContext } from '../Contexts/ContextProvider';
 import axiosClient from '../axios';
+import Toasts from './Toasts';
 
 
 export default function DefaultLayout() {
@@ -55,6 +56,7 @@ const{currentUser, userToken, setCurrentUser, setUserToken} = useStateContext();
     </nav>
     <hr /> 
       <Outlet/>
+      <Toasts/>
     </div>
   )
 }

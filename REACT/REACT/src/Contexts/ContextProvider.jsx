@@ -7,50 +7,25 @@ currentUser:{},
 userToken: null,
 survey:[],
 questionType:[],
+toast: {
+    message: null,
+    show: false,
+},
 setCurrentUser: ()=>{}, 
 setUserToken: ()=>{}
 })
 
 const tmpSurvey =[
 
-    
 
-//    {
-//     "id": 1,
-//     "titre_sondage": "Add your name in the body",
-//     "reponse1": "Add your name in the body",
-//     "reponse2": "Add your name in the body",
-//     "reponse3": "Add your name in the body",   
-//     "reponse4": "Add your name in the body",   
-//     "reponse5": "Add your name in the body",
-//    },
-//    {
-//     "id": 2,
-//     "titre_sondage": "Add your name in the body",
-//     "reponse1": "Add your name in the body",
-//     "reponse2": "Add your name in the body",
-//     "reponse3": "Add your name in the body",   
-//     "reponse4": "Add your name in the body",   
-//     "reponse5": "Add your name in the body",
-//    },
-//    {
-//     "id": 3,
-//     "titre_sondage": "Add your name in the body",
-//     "reponse1": "Add your name in the body",
-//     "reponse2": "Add your name in the body",
-//     "reponse3": "Add your name in the body",   
-//     "reponse4": "Add your name in the body",   
-//     "reponse5": "Add your name in the body",
-//    }
 ]
-
-
 export const ContextProvider = ({children})=>{
     const [currentUser, setCurrentUser] = useState({});
     const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN') || '');
-
     const [survey, setSurvey] = useState(tmpSurvey)
     const [questionTypes] = useState(['text', 'select', 'radio', 'checkbox','textarea'])
+    const [toast, setToast] = useState({message: '', show: false})
+
 
     const setUserToken = (token)=>{
      if (token) {
@@ -59,8 +34,13 @@ export const ContextProvider = ({children})=>{
         localStorage.removeItem('TOKEN')
      }
      _setUserToken(token);
+    };
+    const showToast = (message) => {
+        setToast({message, show: true})
+        setTimeout(() => {
+            setToast({message:'', show: false})
+        },5000)
     }
-
     return(
         <StateContext.Provider value= {{
             currentUser,
@@ -68,8 +48,9 @@ export const ContextProvider = ({children})=>{
             userToken,
             setUserToken,
             survey,
-            questionTypes
-         
+            questionTypes,
+            toast,
+            showToast
         }}>
             {children}
         </StateContext.Provider>

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import PageComponent from '../Components/PageComponent'
-import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { LinkIcon, TrashIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import axiosClient from "../axios.js";
 import Tbutton from '../Components/core/Tbutton.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import SurveyQuestions from '../Components/SurveyQuestions.jsx';
 import {v4 as uuidv4} from "uuid"
+import { useStateContext } from '../Contexts/ContextProvider.jsx';
 
 export default function SurveyView() {
+  const {showToast} = useStateContext();
   const navigate = useNavigate();
   const {id} = useParams()
     const [survey, setSurvey] = useState({
@@ -20,6 +22,7 @@ export default function SurveyView() {
         expire_date:"",
         questions:[],
     });
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('');
     const onImageChoose =(ev)=>{
         const file = ev.target.files[0];
@@ -44,10 +47,22 @@ export default function SurveyView() {
         payload.image = payload.image_url
       }
       delete payload.image_url;
-      axiosClient.post('/survey', payload)
-      .then((res) => {
+      let res = null;
+      if(id){
+        res = axiosClient.put(`/survey/${id}`, payload)
+      }else{
+        res =axiosClient.post('/survey', payload)
+      }
+      res.then((res) => {
         console.log(res);
         navigate('/survey')
+        if(id)
+        {
+          showToast('Le formulaire a été bien modifié')
+        }else{
+          showToast('Le formulaire a été bien créé')
+        }
+        
       })
      .catch((err)=>{
       if (err && err.response) {
@@ -76,10 +91,15 @@ export default function SurveyView() {
       })
       setSurvey({...survey})
     };
+    const onDelete = ()=>{
+      
+    }
     useEffect(()=>{
       if(id){
+        setLoading(true)
         axiosClient.get(`/survey/${id}`).then(({data})=>{
           setSurvey(data.data)
+          setLoading(false)
 
         })
       }
@@ -101,11 +121,40 @@ export default function SurveyView() {
       display:"flex",
       justifyContent:"center"
     }
-
+    const loader={
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center',
+      marginTop:'200px',
+      color:"white",
+      fontSize:'30px'
+    }
+   
   return (
-    <PageComponent title={! id ? 'Create new Survey' : 'Update Survey'} >
+    <PageComponent title={! id ? 'Create new Survey' : 'Update Survey'}
+    buttons={
+     <div className='flex gap-2'>
+      <Tbutton color="green"  href={`/survey/public/${survey.slug}`} >
+        <span className='flex items-center bg-green-700 text-white mr-3 p-1 rounded'>
+          <LinkIcon className='h-5 w-5 mr-3'/>
+        Lien Public
+        </span>
+      </Tbutton>
+      <Tbutton color="red" 
+      onClick={onDelete}
+      >
+        <span className='flex items-center bg-red-700 text-white mr-3 p-1 rounded'>
+        <TrashIcon className='h-5 w-5 mr-3'/>
+        Supprimer
+        </span>
+      </Tbutton>
+     </div>
+    }
+     >
       <br />
       <section style={form_create_survey}>
+        {loading && <div style={loader}>En chargement...</div>}
+        {!loading &&    
         <form onSubmit={onSubmit} className='bg-white p-4 'action="#" methode="POST">
           
         <div className="space-y-12">
@@ -221,6 +270,7 @@ export default function SurveyView() {
           </Tbutton>
         </div>
       </form>
+       }
     </section>
     </PageComponent>
   )
