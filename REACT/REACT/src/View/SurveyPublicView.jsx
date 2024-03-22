@@ -4,8 +4,6 @@ import { useParams } from 'react-router-dom';
 import axiosClient from "../axios.js";
 import SurveyPublicQuestionView from '../Components/SurveyPublicQuestionView.jsx';
 
-
-
 export default function SurveyPublicView() {
     const answers ={};
     const [survey, setSurvey] = useState({
@@ -88,7 +86,6 @@ export default function SurveyPublicView() {
                 >
                     Soumettre
                 </button>
-                        
                     </>
                     )}
             </form>

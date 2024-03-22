@@ -3,8 +3,8 @@ import React from 'react'
 export default function PageComponent({title, buttons="", children}) {
   return (
     <div>
-        <div className="bg-gray-100 Surveys flex justify-between text-black items-center">
-            <h3>{title}</h3>
+        <div className=" flex justify-between text-black items-center mx-4">
+            <h4>{title}</h4>
             {buttons}
         </div>
         <div>

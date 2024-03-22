@@ -48,7 +48,7 @@ export default function SurveyQuestions({questions,  onQuestionsUpdate}) {
            className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-500 hover:bg-gray-700" 
            onClick={() => addQuestion()}>
            <PlusCircleIcon className="w-4 mr-2"/>
-            Add question
+            Ajouter une question
           </button>
       </div>
       {myQuestions.length ? (

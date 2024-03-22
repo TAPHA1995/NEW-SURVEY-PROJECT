@@ -4,6 +4,7 @@ import { useEffect, useEffectn, useState } from "react";
 import axiosClient from "../axios.js";
 import Tbutton from "../Components/core/Tbutton.jsx";
 import { EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -22,32 +23,42 @@ export default function Dashboard() {
       return error;
     });
   }, []);
-
+  const chargement={
+    fontSize:'30px',
+    color:'black',
+    display:'flex',
+    justifyContent:'center',
+    marginTop:'100px'
+  }
     return (
     <div>
-      <PageComponent title="Dashboard">
+      <PageComponent title="Tableau de bord">
         <br />
-        {loading && <div className="flex justify-center">En chargement...</div>}
+        {loading && <div style={chargement}>En charge...</div>}
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 px-2 lg:grid-cols-3 gap-5 text-gray-700">
-            <DashboardCard
-            title="Total Surveys"
-            className="order-1 lg:order-2"
-            style="animation-delay: 0.1s"
-            >
+            <Link to="/Survey">
+              <DashboardCard
+              title="Total Surveys"
+              className="order-1 lg:order-2"
+              style="animation-delay: 0.1s"
+              >
               <div className="text-8xl pb-4 font-semibold flex-1 flex items-center justify-center">
                 {data.totalSurveys}
               </div>
-            </DashboardCard>
-            <DashboardCard
-            title="Total Answers"
-            className="order-2 lg:order-4"
-            style="animation-delay: 0.2s"
-            >
+              </DashboardCard>
+             </Link>
+             <Link to="">
+              <DashboardCard
+              title="Total Answers"
+              className="order-2 lg:order-4"
+              style="animation-delay: 0.2s"
+              >
               <div className="text-8xl pb-4 font-semibold flex-1 flex items-center justify-center">
-               {data.totalAnswers}
+              {data.totalAnswers}
               </div>
-            </DashboardCard>
+              </DashboardCard>
+            </Link>
             <DashboardCard
             title="Latest Survey"
             className="order-3 lg:order-1 row-span-2"
@@ -63,11 +74,11 @@ export default function Dashboard() {
                   {data.latestSurvey.title}
                 </h3>
                  <div className="flex justify-between text-sm mb-1">
-                  <div>Create Date:</div>
+                  <div>Date de création:</div>
                   <div>{data.latestSurvey.created_at}</div>
                  </div>
                  <div className="flex justify-between text-sm mb-1">
-                  <div>Expire Date:</div>
+                  <div>Date d'expiration:</div>
                   <div>{data.latestSurvey.expire_date}</div>
                  </div>
                  <div className="flex justify-between text-sm mb-1">
@@ -79,21 +90,23 @@ export default function Dashboard() {
                   <div>{data.latestSurvey.questions}</div>
                  </div>
                  <div className="flex justify-between text-sm mb-3">
-                   <div>Answers:</div>
+                   <div>Réponse:</div>
                    <div>{data.latestSurvey.answers}</div>
                  </div>
                  <div className="flex justify-between">
                   <Tbutton to={`/survey/${data.latestSurvey.id}`}>
                   <span className='flex items-center'>
                     <PencilIcon className="w-5 h-5 mr-2" />
-                    Edit Survey
+                    Editer
                     </span>
                   </Tbutton>
                   <Tbutton Link>
+                  <Link to="">
                     <span className='flex items-center'>
                       <EyeIcon className="w-5 h-5 mr-2" />
-                      View Answers
+                      Voir
                     </span>
+                  </Link>
                   </Tbutton>
                  </div>
               </div>
@@ -106,8 +119,7 @@ export default function Dashboard() {
             </DashboardCard>
             <DashboardCard
             title="Latest Answers"
-            className="order-4 lg:order-3 row-span-2"
-            style="animation-delay: 0.3s"
+            className="order-4 lg:order-3 row-span-2" 
             >
               {data.latestAnswers.length && (
                 <div className="text-left">
@@ -118,10 +130,11 @@ export default function Dashboard() {
                 className="block p-2 hover:bg-gray-100/90"
                 >
                 <div className="font-semibold">{answer.survey.title}</div>
-                <smail>
-                   Answer Made at:
-                  <i className="font-semibold">{answer.end_date}</i>
-                </smail>
+                <Link to="">
+                  <smail>
+                    Répondu à : <i className="font-semibold">{answer.end_date}</i>
+                  </smail>
+                </Link>
                 </a>
                 ))}
                 </div>

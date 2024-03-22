@@ -46,13 +46,12 @@ export default function Survey() {
      
   },[])
 
-  const loader={
+  const chargement={
+    fontSize:'30px',
+    color:'black',
     display:'flex',
     justifyContent:'center',
-    alignItems:'center',
-    marginTop:'200px',
-    color:"white",
-    fontSize:'30px'
+    marginTop:'100px'
   }
   const  vide={
     display:'flex',
@@ -60,22 +59,20 @@ export default function Survey() {
     alignItems:'center',
 
   }
- 
   return (
     <>
-    <PageComponent title="Survey" buttons={
+    <PageComponent title="Formulaires" buttons={
       <Tbutton color="green" to="/survey/create" >
         <span className='flex items-center bg-green-700 text-white mr-3 p-1 rounded'>
-        <PlusCircleIcon className='h-9 w-9 mr-3'/>
-        Create new
+        <PlusCircleIcon className='h-5 w-5 mr-3'/>
+        Créer
         </span>
       </Tbutton>
     }>
-      <br />
-      
+      <br />   
       <div>
-        {loading &&<div style={loader}>
-          En chargement...
+        {loading &&<div style={chargement}>
+          En charge...
         </div>
         }
       </div>
@@ -83,7 +80,7 @@ export default function Survey() {
         <div style={vide}>
           {survey.length === 0 && <div className='py-8 text-center text-white'>Aucune création</div>}
       </div>
-        <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 ml-[80px]'>
          
           {survey.map((survey) => (
             <div className="inner">
@@ -100,7 +97,7 @@ export default function Survey() {
                   <Tbutton to={`/survey/${survey.id}`}>
                       <PencilIcon className='w-5 h-5 mr-2'/>
                   </Tbutton>
-                  <Tbutton href={`/view/survey/${survey.slug}`}>
+                  <Tbutton href={`/survey/public/${survey.slug}`}>
                       <ArrowTopRightOnSquareIcon className='w-7 h-7'/>
                   </Tbutton>
                   {survey.id && (

@@ -27,8 +27,8 @@ export default function QuestionEditor({
     function onTypeChange(ev){
         const newModel = {
          ...model,
-         type: ev.target.value
-        }
+         type: ev.target.value,
+        };
         if(!shouldhaveOption(model.type) && shouldhaveOption(ev.target.value))
         {
             if(!model.data.options){
@@ -63,22 +63,22 @@ export default function QuestionEditor({
                 {index + 1}. {model.question}
             </h4>
             <div className="flex items-center">
-            <button type="button"
-            className="flex items-center text-xs py-1 px-3 mr-2 rounded-ms text-white
-            bg-gray-600
-            hover:bg-gray-700"
-            onClick={()=> addQuestion(index + 1)}
-            >
+                <button type="button"
+                className="flex items-center text-xs py-1 px-3 mr-2 rounded-ms text-white
+                bg-gray-600
+                hover:bg-gray-700"
+                onClick={()=> addQuestion(index + 1)}
+                >
                 <PlusIcon className="w-4" />
-                add
-            </button>
-            <button
-            type="button"
-            className="flex items-center text-xs py-1 px-3 mr-2 rounded-m border border-transparent text-red-500 hover:border-red-600"
-            onClick={()=> deleteQuestion(question)}>
-            <TrashIcon className="w-4"/>
-            Delete
-            </button>
+                    Ajouter
+                </button>
+                <button
+                type="button"
+                className="flex items-center text-xs py-1 px-3 mr-2 rounded-m border border-transparent text-red-500 hover:border-red-600"
+                onClick={()=> deleteQuestion(question)}>
+                <TrashIcon className="w-4"/>
+                  Supprimer
+                </button>
             </div>
         </div>
         <div className="flex gap-3 justify-between mb-3 items-center">
@@ -102,7 +102,7 @@ export default function QuestionEditor({
             htmlFor="questionType"
             className="block text-sm front-medium text-gray-700"
             >
-                Question Type
+               Type Question 
             </label>
             <select
             id="questionType"
@@ -156,11 +156,11 @@ export default function QuestionEditor({
             hover:bg-gray-700
             ">  
             <PlusIcon className="w-4" />
-            Add
+            Ajouter
             </button>
             </h4>
             {model.data.options.length === 0 && <div className="text-xs text-gray-600 text-center py-3">
-                You don't have any option defined
+                vous avez ajouté aucune option
                 </div>
                 }
                 {model.data.options.length > 0 &&<div>

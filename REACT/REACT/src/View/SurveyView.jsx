@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PageComponent from '../Components/PageComponent'
-import { LinkIcon, TrashIcon, UserCircleIcon } from '@heroicons/react/24/solid';
+import { LinkIcon, ShareIcon, TrashIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import axiosClient from "../axios.js";
 import Tbutton from '../Components/core/Tbutton.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -119,7 +119,8 @@ export default function SurveyView() {
   }
     const form_create_survey={
       display:"flex",
-      justifyContent:"center"
+      justifyContent:"center",
+      
     }
     const loader={
       display:'flex',
@@ -129,30 +130,22 @@ export default function SurveyView() {
       color:"white",
       fontSize:'30px'
     }
+    const lien={
+      fontSize:'10px'
+    }
    
   return (
-    <PageComponent title={! id ? 'Create new Survey' : 'Update Survey'}
+    <PageComponent title={! id ? 'Créer' : 'Modifier'}
     buttons={
-     <div className='flex gap-2'>
+     <div className='flex gap-2 item-center bg-sky-600 p-1 rounded text-white'>
       <Tbutton color="green"  href={`/survey/public/${survey.slug}`} >
-        <span className='flex items-center bg-green-700 text-white mr-3 p-1 rounded'>
-          <LinkIcon className='h-5 w-5 mr-3'/>
-        Lien Public
-        </span>
-      </Tbutton>
-      <Tbutton color="red" 
-      onClick={onDelete}
-      >
-        <span className='flex items-center bg-red-700 text-white mr-3 p-1 rounded'>
-        <TrashIcon className='h-5 w-5 mr-3'/>
-        Supprimer
-        </span>
+          <ShareIcon className='h-5 w-5 mr-3' />       
       </Tbutton>
      </div>
     }
      >
-      <br />
-      <section style={form_create_survey}>
+      
+      <section style={form_create_survey} className='bg-gray-100'>
         {loading && <div style={loader}>En chargement...</div>}
         {!loading &&    
         <form onSubmit={onSubmit} className='bg-white p-4 'action="#" methode="POST">
@@ -182,7 +175,7 @@ export default function SurveyView() {
                         
                     >
                         <input type="file" className='absolute  opacity-0' onChange={onImageChoose} />
-                        Change
+                        Changer
                     </button>
                   </div>
                 </div>
@@ -193,7 +186,7 @@ export default function SurveyView() {
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                  Survey Title
+                  Titre
                 </label>
                 <div className="mt-2">
                   <input
@@ -224,7 +217,7 @@ export default function SurveyView() {
               </div>
               <div className="sm:col-span-4">
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Date of expiration
+                  Date d'expiration
                 </label>
                 <div className="mt-2">
                   <input
@@ -241,7 +234,7 @@ export default function SurveyView() {
               <div className="sm:col-span-4">
                 <br />
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                 Active
+                 Actif
                 </label>
                 <div className="mt-2">
                   <input
@@ -256,18 +249,18 @@ export default function SurveyView() {
                 </div>
               </div>
               <br />
-             <button type='button' onClick={addQuestion}>add question</button>
+             <button type='button' onClick={addQuestion}>Ajouter une question</button>
               <SurveyQuestions questions={survey.questions} onQuestionsUpdate={onQuestionsUpdate} />
               </div>
             </div>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <Tbutton
-            className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          <button
+            className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold  shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Save
-          </Tbutton>
+            Créer
+          </button>
         </div>
       </form>
        }

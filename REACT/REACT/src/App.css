@@ -8,7 +8,8 @@
 }
 
 .form_create_survey_input, input .textarea{
-    width:850px;
+    width:950px;
+    color: #000;
 }
 
 .form_create_survey, form{
@@ -16,8 +17,8 @@
     
 }
 body {
-    background-color: #444444;
-    color: rgb(0, 0, 0);
+    background-color:white;
+    color: rgb(255, 255, 255);
     font-family: "Inter", sans-serif;
 }
 
